@@ -11,6 +11,9 @@ import {
 import myEpicGame from "../../utils/MyEpicGame.json";
 import { Address } from "cluster";
 
+// Components
+import LoadingIndicator from "../LoadingIndicator";
+
 const SelectCharacter = ({
   setCharacterNFT,
 }: {
@@ -18,6 +21,7 @@ const SelectCharacter = ({
 }) => {
   const [characters, setCharacters] = useState<PlayableCharacterData[]>([]);
   const [gameContract, setGameContract] = useState<Contract>(null!);
+  const [mintingCharacter, setMintingCharacter] = useState(false);
 
   const getCharacters = async () => {
     try {
@@ -106,6 +110,7 @@ const SelectCharacter = ({
 
   const mintCharacterNFTAction = (characterId: number) => async () => {
     try {
+      setMintingCharacter(true);
       if (gameContract) {
         console.log("Minting character in progress...");
         const mintTxn = await gameContract.mintCharacterNFT(characterId);
@@ -114,6 +119,8 @@ const SelectCharacter = ({
       }
     } catch (error) {
       console.warn("MintCharacterAction Error:", error);
+    } finally {
+      setMintingCharacter(true);
     }
   };
 
@@ -137,6 +144,18 @@ const SelectCharacter = ({
       <h2>Mint Your Hero. Choose wisely.</h2>
       {characters.length > 0 && (
         <div className="character-grid">{renderCharacters()}</div>
+      )}
+      {mintingCharacter && (
+        <div className="loading">
+          <div className="indicator">
+            <LoadingIndicator />
+            <p>Minting In Progress...</p>
+          </div>
+          <img
+            src="https://media2.giphy.com/media/61tYloUgq1eOk/giphy.gif?cid=ecf05e47dg95zbpabxhmhaksvoy8h526f96k4em0ndvx078s&rid=giphy.gif&ct=g"
+            alt="Minting loading indicator"
+          />
+        </div>
       )}
     </div>
   );

@@ -15,6 +15,7 @@ import myEpicGame from "./utils/MyEpicGame.json";
 // Components
 import SelectCharacter from "./Components/SelectCharacter";
 import Arena from "./Components/Arena";
+import LoadingIndicator from "./Components/LoadingIndicator";
 
 // Constants
 const TWITTER_HANDLE = "_buildspace";
@@ -28,6 +29,7 @@ const App = () => {
   const [characterNFT, setCharacterNFT] = useState<PlayableCharacterData>(
     null!
   );
+  const [isLoading, setIsLoading] = useState(false);
   /*
    * Start by creating a new action that we will run on component load
    */
@@ -60,6 +62,8 @@ const App = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -116,6 +120,8 @@ const App = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -123,6 +129,7 @@ const App = () => {
    * This runs our function when the page loads.
    */
   useEffect(() => {
+    setIsLoading(true);
     checkIfWalletIsConnected();
   }, []);
 
@@ -138,6 +145,9 @@ const App = () => {
 
   // Render Methods
   const renderContent = () => {
+    if (isLoading) {
+      return <LoadingIndicator />;
+    }
     /*
      * Scenario #1: No accoutn connected
      */

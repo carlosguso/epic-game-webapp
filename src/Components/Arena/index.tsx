@@ -10,6 +10,9 @@ import {
 import myEpicGame from "../../utils/MyEpicGame.json";
 import "./Arena.css";
 
+// Components
+import LoadingIndicator from "../LoadingIndicator";
+
 /*
  * We pass in our characterNFT metadata so we can a cool card in our UI
  */
@@ -23,7 +26,8 @@ const Arena = ({
   // State
   const [gameContract, setGameContract] = useState<Contract>(null!);
   const [boss, setBoss] = useState<BossData>(null!);
-  const [attackState, setAttackState] = useState("");
+  const [attackState, setAttackState] = useState<"" | "attacking" | "hit">("");
+  const [showToast, setShowToast] = useState(false);
 
   const fetchBoss = async () => {
     const bossTxn: BossContractData = await gameContract.getBigBoss();
@@ -40,6 +44,11 @@ const Arena = ({
         await attackTxn.wait();
         console.log("attackTxn:", attackTxn);
         setAttackState("hit");
+
+        setShowToast(true);
+        setTimeout(() => {
+          setShowToast(false);
+        }, 5000);
       }
     } catch (error) {
       console.error("Error attacking boss:", error);
@@ -103,7 +112,12 @@ const Arena = ({
 
   return (
     <div className="arena-container">
-      {/* Replace your Boss UI with this */}
+      {boss && (
+        <div id="toast" className={showToast ? "show" : ""}>
+          <div id="desc">{`💥 ${boss.name} was hit for ${characterNFT.attackDamage}!`}</div>
+        </div>
+      )}
+
       {boss && (
         <div className="boss-container">
           <div className={`boss-content ${attackState}`}>
@@ -121,6 +135,12 @@ const Arena = ({
               {`💥 Attack ${boss.name}`}
             </button>
           </div>
+          {attackState === "attacking" && (
+            <div className="loading-indicator">
+              <LoadingIndicator />
+              <p>Attacking ⚔️</p>
+            </div>
+          )}
         </div>
       )}
 
