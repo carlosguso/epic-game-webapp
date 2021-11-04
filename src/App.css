@@ -60,15 +60,31 @@
 .connect-wallet-button {
   background-image: linear-gradient(
     to right,
-    #ff8177 0%,
-    #ff867a 0%,
-    #ff8c7f 21%,
-    #f99185 52%,
-    #cf556c 78%,
-    #b12a5b 100%
+    #c453f8 0%,
+    #aa62fc 0%,
+    #ba53ff 21%,
+    #bb4afc 52%,
+    #672586 78%,
+    #671288 100%
   );
   background-size: 200% 200%;
   animation: gradient-animation 4s ease infinite;
+}
+
+.gradient-text {
+  background-image: linear-gradient(
+    to right,
+    #c453f8 0%,
+    #aa62fc 0%,
+    #ba53ff 21%,
+    #bb4afc 52%,
+    #672586 78%,
+    #671288 100%
+  );
+  background-size: cover;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .mint-button {
